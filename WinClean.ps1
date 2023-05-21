@@ -18,8 +18,7 @@ Start-Sleep -Seconds 2
 
 # Clear the recycle bin
 Write-Host "Clearing the recycle bin..."
-Remove-Item -Path "C:\$Recycle.Bin" -Recurse -Force
-Write-Host "Recycle bin cleared."
+Clear-RecycleBin -Force -ErrorAction SilentlyContinue
 Start-Sleep -Seconds 2
 
 # Perform disk cleanup of system files

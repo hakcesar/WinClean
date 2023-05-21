@@ -14,21 +14,25 @@ if ($confirmation -ne "Y") {
 Write-Host "Cleaning up temporary files..."
 Remove-Item -Path $env:TEMP\* -Force -Recurse
 Write-Host "Temporary files cleaned."
+Start-Sleep -Seconds 2
 
 # Clear the recycle bin
 Write-Host "Clearing the recycle bin..."
 Remove-Item -Path "C:\$Recycle.Bin" -Recurse -Force
 Write-Host "Recycle bin cleared."
+Start-Sleep -Seconds 2
 
 # Perform disk cleanup of system files
 Write-Host "Performing disk cleanup..."
 Start-Process -FilePath "cleanmgr.exe" -ArgumentList "/sagerun:1" -Wait
 Write-Host "Disk cleanup of system files completed."
+Start-Sleep -Seconds 2
 
 # Clean temporary internet files
 Write-Host "Cleaning temporary internet files..."
 Remove-Item -Path "$env:LOCALAPPDATA\Microsoft\Windows\INetCache\*.*" -Force -Recurse
 Write-Host "Temporary internet files cleaned."
+Start-Sleep -Seconds 2
 
 # Clean browser cache and history
 Write-Host "Cleaning browser cache and history..."
@@ -39,6 +43,7 @@ Remove-Item -Path "$env:LOCALAPPDATA\Google\Chrome\User Data\Default\History" -F
 Remove-Item -Path "$env:APPDATA\Mozilla\Firefox\Profiles\*\cache2" -Recurse -Force
 Remove-Item -Path "$env:APPDATA\Mozilla\Firefox\Profiles\*\places.sqlite" -Force
 Write-Host "Browser cache and history cleaned."
+Start-Sleep -Seconds 2
 
 # Uninstall unwanted or unnecessary programs
 <# function Uninstall-Program {

@@ -14,17 +14,16 @@ if ($confirmation -ne "Y") {
 Write-Host "Disabling program startup impact..."
 
 # Disable Microsoft Edge
-$edgePackage = Get-WindowsPackage -Online | Where-Object { $_.PackageName -eq "Microsoft.MicrosoftEdge" }
-if ($edgePackage) {
-    Disable-WindowsOptionalFeature -FeatureName $edgePackage.PackageName -Online
-    Write-Host "Microsoft Edge startup impact disabled."
-}
+$edgeExclusion = "Microsoft.MicrosoftEdge"
+$edgeUpdateExclusion = "Microsoft.MicrosoftEdge.Update"
 
-# Disable Microsoft Edge Update
-$edgeUpdatePackage = Get-WindowsPackage -Online | Where-Object { $_.PackageName -eq "Microsoft.MicrosoftEdge.Update" }
-if ($edgeUpdatePackage) {
-    Disable-WindowsOptionalFeature -FeatureName $edgeUpdatePackage.PackageName -Online
-    Write-Host "Microsoft Edge Update startup impact disabled."
+$edgeStartupStatus = (Get-MpPreference).ExclusionProcess | Where-Object { $_ -eq $edgeExclusion }
+if ($edgeStartupStatus) {
+    Write-Host "Microsoft Edge startup impact is already disabled."
+}
+else {
+    Set-MpPreference -ExclusionProcess ($edgeExclusion, $edgeUpdateExclusion)
+    Write-Host "Microsoft Edge startup impact disabled."
 }
 
 Write-Host "Program startup impact disabled."
@@ -46,22 +45,6 @@ Start-Process -FilePath "cleanmgr.exe" -ArgumentList "/sagerun:1" -Wait
 Write-Host "Disk cleanup of system files completed."
 Start-Sleep -Seconds 2
 
-# Clean temporary internet files
-Write-Host "Cleaning temporary internet files..."
-Remove-Item -Path "$env:LOCALAPPDATA\Microsoft\Windows\INetCache\*.*" -Force -Recurse
-Write-Host "Temporary internet files cleaned."
-Start-Sleep -Seconds 2
-
-# Clean browser cache and history
-Write-Host "Cleaning browser cache and history..."
-# Chrome
-Remove-Item -Path "$env:LOCALAPPDATA\Google\Chrome\User Data\Default\Cache" -Recurse -Force
-Remove-Item -Path "$env:LOCALAPPDATA\Google\Chrome\User Data\Default\History" -Force
-# Firefox
-Remove-Item -Path "$env:APPDATA\Mozilla\Firefox\Profiles\*\cache2" -Recurse -Force
-Remove-Item -Path "$env:APPDATA\Mozilla\Firefox\Profiles\*\places.sqlite" -Force
-Write-Host "Browser cache and history cleaned."
-Start-Sleep -Seconds 2
 
 # Uninstall unwanted or unnecessary programs
 <# function Uninstall-Program {

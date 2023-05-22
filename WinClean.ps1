@@ -14,14 +14,15 @@ if ($confirmation -ne "Y") {
 # Disable Microsoft Edge and Microsoft Edge Update
 Write-Host "Disabling Microsoft Edge startup impact..."
 
-# Get the path to the Microsoft Edge executable
-$edgePath = Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\App Paths\MicrosoftEdge.exe | Select-Object -Property ExecutablePath
+# Get the path to the msedge.exe executable
+$edgePath = Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\App Paths\msedge.exe | Select-Object -Property ExecutablePath
 
-#Disable Microsoft Edge
+# Disable msedge.exe
 Set-ItemProperty HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\StartupApproved\Run $edgePath -Value $null
 
-#Disable Microsoft Edge Update
-Set-ItemProperty HKLM:\Software\Policies\Microsoft\Windows\Explorer\EdgeUpdate Disable -Value 1
+# Restart Explorer
+Restart-Explorer
+
 Write-Host "Microsoft Edge startup impact disabled."
 Start-Sleep -Seconds 5
 

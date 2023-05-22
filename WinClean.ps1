@@ -10,34 +10,19 @@ if ($confirmation -ne "Y") {
     exit
 }
 
-# Function to disable Microsoft Edge startup impact
-function Disable-MicrosoftEdgeStartupImpact {
-    Write-Host "Disabling Microsoft Edge startup impact..."
 
-    $edgeExclusion = "Microsoft.MicrosoftEdge"
-    $edgeUpdateExclusion = "Microsoft.MicrosoftEdge.Update"
+# Disable Microsoft Edge and Microsoft Edge Update
+Write-Host "Disabling Microsoft Edge startup impact..."
 
-    $edgeStartupStatus = (Get-MpPreference).ExclusionProcess | Where-Object { $_ -eq $edgeExclusion }
-    if ($edgeStartupStatus) {
-        Write-Host "Microsoft Edge startup impact is already disabled."
-    }
-    else {
-        $exclusionProcesses = (Get-MpPreference).ExclusionProcess
-        $exclusionProcesses += $edgeExclusion
-        $exclusionProcesses += $edgeUpdateExclusion
-        Set-MpPreference -ExclusionProcess $exclusionProcesses
-        Write-Host "Microsoft Edge startup impact disabled."
-    }
-}
+# Get the path to the Microsoft Edge executable
+$edgePath = Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\App Paths\MicrosoftEdge.exe | Select-Object -Property ExecutablePath
 
-# Disable common program startup impact
-Write-Host "Disabling program startup impact..."
+#Disable Microsoft Edge
+Set-ItemProperty HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\StartupApproved\Run $edgePath -Value $null
 
-# Disable Microsoft Edge
-Disable-MicrosoftEdgeStartupImpact
-
-Write-Host "Program startup impact disabled."
-
+#Disable Microsoft Edge Update
+Set-ItemProperty HKLM:\Software\Policies\Microsoft\Windows\Explorer\EdgeUpdate Disable -Value 1
+Write-Host "Microsoft Edge startup impact disabled."
 Start-Sleep -Seconds 5
 
 # Clean up temporary files

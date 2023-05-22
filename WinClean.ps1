@@ -10,6 +10,25 @@ if ($confirmation -ne "Y") {
     exit
 }
 
+# Disable common program startup impact
+Write-Host "Disabling program startup impact..."
+
+# Disable Microsoft Edge
+$edgePackage = Get-WindowsPackage -Online | Where-Object { $_.PackageName -eq "Microsoft.MicrosoftEdge" }
+if ($edgePackage) {
+    Disable-WindowsOptionalFeature -FeatureName $edgePackage.PackageName -Online
+    Write-Host "Microsoft Edge startup impact disabled."
+}
+
+# Disable Microsoft Edge Update
+$edgeUpdatePackage = Get-WindowsPackage -Online | Where-Object { $_.PackageName -eq "Microsoft.MicrosoftEdge.Update" }
+if ($edgeUpdatePackage) {
+    Disable-WindowsOptionalFeature -FeatureName $edgeUpdatePackage.PackageName -Online
+    Write-Host "Microsoft Edge Update startup impact disabled."
+}
+
+Write-Host "Program startup impact disabled."
+
 # Clean up temporary files
 Write-Host "Cleaning up temporary files..."
 Remove-Item -Path $env:TEMP\* -Force -Recurse

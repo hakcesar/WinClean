@@ -15,7 +15,7 @@ if ($confirmation -ne "Y") {
 Write-Host "Disabling Microsoft Edge startup impact..."
 
 # Get the path to the msedge.exe executable
-#edgePath = Get-Command msedge.exe | Select-Object -Property Path
+$edgePath = Get-Command msedge.exe | Select-Object -Property Path
 
 # Disable msedge.exe
 Set-ItemProperty HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\StartupApproved\Run $edgePath -Value $null

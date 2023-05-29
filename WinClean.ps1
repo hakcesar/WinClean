@@ -24,10 +24,12 @@ else {
     Write-Host "Disabling Microsoft Edge startup impact..."
 }
 
-# Restart Explorer
-Restart-Process -Name explorer.exe
-
 Write-Host "Microsoft Edge startup impact disabled."
+
+# Restart Explorer
+Write-Host "Restarting Windows Explorer"
+taskkill /f /im explorer.exe
+start explorer.exe
 Start-Sleep -Seconds 5
 
 # Clean up temporary files

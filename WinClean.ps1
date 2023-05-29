@@ -21,7 +21,8 @@ $edgePath = Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\App
 Set-ItemProperty HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\StartupApproved\Run $edgePath -Value $null
 
 # Restart Explorer
-Restart-Explorer
+Stop-Process -Name explorer.exe
+Start-Process -Name explorer.exe
 
 Write-Host "Microsoft Edge startup impact disabled."
 Start-Sleep -Seconds 5

@@ -10,16 +10,18 @@ if ($confirmation -ne "Y") {
     exit
 }
 
+# Disbale non-essentially startup programs
 
-# Disable Microsoft Edge and Microsoft Edge Update
-Write-Host "Disabling Microsoft Edge startup impact..."
-
-# Get the path to the msedge.exe executable
+# If Microsoft Edge is not set to start automatically, do nothing
 $edgePath = Get-ItemProperty HKCU:\Software\Microsoft\Windows\CurrentVersion\Run | Select-Object -Property Value | Where-Object {$_ -eq "msedge.exe"}
 
-# If msedge.exe is set to start automatically, disable it
-if ($edgePath -ne $null) {
-Set-ItemProperty HKCU:\Software\Microsoft\Windows\CurrentVersion\Run $edgePath -Value $null
+if ($edgePath -eq $null) {
+    Write-Host "Microsoft Edge is not set to start automatically."
+}
+else {
+# Disable Microsoft Edge from starting automatically
+    Set-ItemProperty HKCU:\Software\Microsoft\Windows\CurrentVersion\Run $edgePath -Value $null
+    Write-Host "Disabling Microsoft Edge startup impact..."
 }
 
 # Restart Explorer

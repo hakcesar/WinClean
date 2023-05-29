@@ -28,7 +28,7 @@ Start-Sleep -Seconds 5
 
 # Clean up temporary files
 Write-Host "Cleaning up temporary files..."
-Remove-Item -Path $env:TEMP\* -Force -Recurse
+Remove-Item -Path $env:TEMP\* -Force -Recurse -ErrorAction Stop
 Write-Host "Temporary files cleaned."
 Start-Sleep -Seconds 5
 

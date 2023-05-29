@@ -10,7 +10,7 @@ if ($confirmation -ne "Y") {
     exit
 }
 
-# Disbale non-essentially startup programs
+# Disbale non-essential startup programs
 
 # If Microsoft Edge is not set to start automatically, do nothing
 $edgePath = Get-ItemProperty HKCU:\Software\Microsoft\Windows\CurrentVersion\Run | Select-Object -Property Value | Where-Object {$_ -eq "msedge.exe"}

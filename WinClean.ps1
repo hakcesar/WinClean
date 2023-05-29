@@ -15,7 +15,7 @@ if ($confirmation -ne "Y") {
 Write-Host "Disabling Microsoft Edge startup impact..."
 
 # Get the path to the msedge.exe executable
-$edgePath = Get-Command msedge.exe | Select-Object -Property Path
+Get-Process -Name msedge.exe | Select-Object -Property Path
 
 # Get the value of the StartupApproved\Run registry key
 $startupApprovedValue = Get-ItemProperty HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\StartupApproved\Run | Select-Object -Property Value
@@ -26,8 +26,7 @@ Set-ItemProperty HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Startu
 }
 
 # Restart Explorer
-Stop-Process -Name explorer.exe
-Start-Process -Name explorer.exe
+Restart-Process -Name explorer.exe
 
 Write-Host "Microsoft Edge startup impact disabled."
 Start-Sleep -Seconds 5

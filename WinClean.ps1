@@ -17,8 +17,13 @@ Write-Host "Disabling Microsoft Edge startup impact..."
 # Get the path to the msedge.exe executable
 $edgePath = Get-Command msedge.exe | Select-Object -Property Path
 
-# Disable msedge.exe
+# Get the value of the StartupApproved\Run registry key
+$startupApprovedValue = Get-ItemProperty HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\StartupApproved\Run | Select-Object -Property Value
+
+# If msedge.exe is set to start automatically, disable it
+if ($startupApprovedValue -eq $edgePath) {
 Set-ItemProperty HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\StartupApproved\Run $edgePath -Value $null
+}
 
 # Restart Explorer
 Stop-Process -Name explorer.exe

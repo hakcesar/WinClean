@@ -27,7 +27,7 @@ else {
 Write-Host "Microsoft Edge startup impact disabled."
 
 # Restart Explorer
-Write-Host "Restarting Windows Explorer"
+Write-Host "Restarting Windows Explorer."
 taskkill /f /im explorer.exe
 start explorer.exe
 Start-Sleep -Seconds 5

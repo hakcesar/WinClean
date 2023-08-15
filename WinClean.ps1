@@ -57,17 +57,6 @@ Write-Host " "
 Start-Sleep -Seconds 5
 
 
-# Uninstall unwanted or unnecessary programs
-<# function Uninstall-Program {
-    param(
-        [string]$programName
-    )
-
-    Write-Host "Uninstalling program: $programName"
-    Start-Process -FilePath "wmic" -ArgumentList "product where `"`"name='$programName'`" call uninstall" -Wait
-    Write-Host "Program '$programName' uninstalled."
-} #>
-
 # Example usage
 Write-Host "Cleanup complete."
 Write-Host " "

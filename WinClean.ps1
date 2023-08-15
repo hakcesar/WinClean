@@ -67,19 +67,10 @@ if ($confirmation -ne "Y") {
 
 Write-Host " "
 
-# Restart Explorer
-Write-Host "Stopping Windows Explorer."
-taskkill /f /im explorer.exe
-Update-ProgressBar -current 1 -total 6
-Write-Host "Restarting Windows Explorer."
-start explorer.exe
-Write-Host " "
-Start-Sleep -Seconds 5
-
 # Clean up temporary files
 Write-Host "Cleaning up temporary files..."
 Remove-Item -Path $env:TEMP\* -Force -Recurse -ErrorAction Stop
-Update-ProgressBar -current 2 -total 6
+Update-ProgressBar -current 1 -total 8
 Write-Host "Temporary files cleaned."
 Write-Host " "
 Start-Sleep -Seconds 5
@@ -87,7 +78,7 @@ Start-Sleep -Seconds 5
 # Clear the recycle bin
 Write-Host "Clearing the recycle bin..."
 Clear-RecycleBin -Force -ErrorAction SilentlyContinue
-Update-ProgressBar -current 3 -total 6
+Update-ProgressBar -current 2 -total 8
 Write-Host "Permanently deleted the items in the recycle bin."
 Write-Host " "
 Start-Sleep -Seconds 5
@@ -95,24 +86,22 @@ Start-Sleep -Seconds 5
 # Perform disk cleanup of system files
 Write-Host "Performing disk cleanup..."
 Start-Process -FilePath "cleanmgr.exe" -ArgumentList "/sagerun:1" -Wait
-Update-ProgressBar -current 4 -total 6
+Update-ProgressBar -current 3 -total 8
 Write-Host "Disk cleanup of system files completed."
 Write-Host " "
-Start-Sleep -Seconds 5
+Start-Sleep -Seconds 2
 
-# Run two system scans
+# Run system scans
 Write-Host "The final cleanup process may take several minutes depending on your system's performance."
 Write-Host " "
 Start-Sleep -Seconds 3
 
-# Run SFC /scannow
-Write-Host "Running SFC /scannow..."
-Write-Host " "
-Write-Host "The System File Checker (SFC) command scans and repairs corrupted or missing system files."
+# Run SFC tool
+Write-Host "The System File Checker (SFC) tool scans and repairs corrupted or missing system files."
 Write-Host "This process will help ensure the integrity of your system files."
 try {
     Start-Process -FilePath "sfc.exe" -ArgumentList "/scannow" -Wait -NoNewWindow
-    Update-ProgressBar -current 5 -total 6
+    Update-ProgressBar -current 4 -total 8
     Write-Host "SFC scan completed."
 } catch {
     Write-Host "An error occurred while running SFC: $_"
@@ -120,23 +109,55 @@ try {
 Write-Host " "
 Start-Sleep -Seconds 5
 
-# Run DISM /Online /cleanup-image /restorehealth
-Write-Host "Running DISM /Online /cleanup-image /restorehealth..."
-Write-Host " "
-Write-Host "The Deployment Image Servicing and Management (DISM) command restores the health of your Windows image."
-Write-Host "It repairs any issues with system files and components, improving system stability."
+# Run DISM health scan
 try {
-    Start-Process -FilePath "dism.exe" -ArgumentList "/Online /Cleanup-Image /RestoreHealth" -Wait -NoNewWindow
-    Write-Host "DISM restore health completed."
+    Start-Process -FilePath "dism.exe" -ArgumentList "/Online /NoRestart /Cleanup-Image /ScanHealth" -Wait -NoNewWindow
+    Write-Host "DISM scan health completed."
 } catch {
-    Write-Host "An error occurred while running DISM: $_"
+    Write-Host "An error occurred while running DISM scan health: $_"
+}
+
+# If DISM detects corruption try to repair
+if ($error) {
+    Write-Host "DISM: Image corruption detected. Attempting repair..."
+    try {
+        Start-Process -FilePath "dism.exe" -ArgumentList "/Online /NoRestart /Cleanup-Image /RestoreHealth" -Wait -NoNewWindow
+        Write-Host "DISM restore health completed."
+    } catch {
+        Write-Host "An error occurred while running DISM restore health: $_"
+    }
+} else {
+    Update-ProgressBar -current 5 -total 8
+    Write-Host "DISM: No image corruption detected."
 }
 Write-Host " "
 Start-Sleep -Seconds 5
 
+# Run chkdsk on system drive
+$systemDrive = [System.IO.Path]::GetPathRoot($env:SystemDrive)
+Write-Host "Running chkdsk on system drive ($systemDrive)..."
+try {
+    $chkdskOutput = Invoke-Expression -Command "chkdsk $systemDrive /F /R"
+    Write-Host $chkdskOutput
+    $errorsFound = $chkdskOutput -match "errors found"
+    
+    if ($errorsFound) {
+        Update-ProgressBar -current 6 -total 8
+        Write-Host "Errors found on $systemDrive. Scheduling full chkdsk at next reboot."
+    } else {
+        Update-ProgressBar -current 7 -total 8
+        Write-Host "No errors found on $systemDrive. Skipping full chkdsk at next reboot."
+    }
+} catch {
+    Write-Host "An error occurred while running chkdsk: $_"
+}
+Write-Host " "
+Start-Sleep -Seconds 5
+
+
 # Complete
-Update-ProgressBar -current 6 -total 6
-Write-Host "`nCleanup complete."
+Update-ProgressBar -current 8 -total 8
+Write-Host "`nCleanup complete. Your PC will thank you later :)"
 Write-Host " "
 
 } catch {

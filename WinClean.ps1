@@ -1,13 +1,24 @@
 # WinClean script - PowerShell version
 
+# Set console colors
+$Host.UI.RawUI.BackgroundColor = "Black"
+$Host.UI.RawUI.ForegroundColor = "White"
+Clear-Host
+
 # Hi :)
 $asciiArt = @"
-  ____ _ _      ______            _     
- / ___(_) |_   / ___\ \   /\\   / ___|   
-| |   | | __| | |    \\ \\ / / | |       
-| |___| | |_  | |___  \\ V /  | |___    
- \\____|_|\\__|  \\____|  \\_/    \\____|   
-                                        
+ █     █░ ██▓ ███▄    █  ▄████▄   ██▓     ██▓▓█████ ▄▄▄       ███▄    █ 
+▓█░ █ ░█░▓██▒ ██ ▀█   █ ▒██▀ ▀█  ▓██▒    ▓██▒▓█   ▀▒████▄     ██ ▀█   █ 
+▒█░ █ ░█ ▒██▒▓██  ▀█ ██▒▒▓█    ▄ ▒██░    ▒██▒▒███  ▒██  ▀█▄  ▓██  ▀█ ██▒
+░█░ █ ░█ ░██░▓██▒  ▐▌██▒▒▓▓▄ ▄██▒▒██░    ░██░▒▓█  ▄░██▄▄▄▄██ ▓██▒  ▐▌██▒
+░░██▒██▓ ░██░▒██░   ▓██░▒ ▓███▀ ░░██████▒░██░░▒████▒▓█   ▓██▒▒██░   ▓██░
+░ ▓░▒ ▒  ░▓  ░ ▒░   ▒ ▒ ░ ░▒ ▒  ░░ ▒░▓  ░░▓  ░░ ▒░ ░▒▒   ▓▒█░░ ▒░   ▒ ▒ 
+  ▒ ░ ░   ▒ ░░ ░░   ░ ▒░  ░  ▒   ░ ░ ▒  ░ ▒ ░ ░ ░  ░ ▒   ▒▒ ░░ ░░   ░ ▒░
+  ░   ░   ▒ ░   ░   ░ ░ ░          ░ ░    ▒ ░   ░    ░   ▒      ░   ░ ░ 
+    ░     ░           ░ ░ ░          ░  ░ ░     ░  ░     ░  ░         ░ 
+                        ░                                               
+
+                                
 "@
 Write-Host $asciiArt
 Write-Host "Author: hakcesar"
@@ -37,7 +48,6 @@ function Update-ProgressBar {
     Write-Host "`r[$progressBar] $progress%   " -NoNewline
 }
 
-Clear-Host
 
 try {
 # Display a warning message

@@ -56,7 +56,7 @@ function Update-ProgressBar {
 
 try {
 # Display a warning message
-Write-Host "WARNING: This script will clean up temporary files, clear the recycle bin, perform disk cleanup, and run system scans. Make sure to back up any important data before running this script."
+Write-Host "WARNING: This script will perfom basic cleanup. Make sure to back up any important data before running this script."
 
 # Prompt the user for confirmation before proceeding
 $confirmation = Read-Host "Do you want to continue? (Y/N)"

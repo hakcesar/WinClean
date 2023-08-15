@@ -69,9 +69,13 @@ Write-Host " "
 
 # Clean up temporary files
 Write-Host "Cleaning up temporary files..."
-Remove-Item -Path $env:TEMP\* -Force -Recurse -ErrorAction Stop
-Update-ProgressBar -current 1 -total 8
-Write-Host "Temporary files cleaned."
+try {
+    Remove-Item -Path $env:TEMP\* -Force -Recurse -ErrorAction Stop
+    Update-ProgressBar -current 1 -total 8
+    Write-Host "Temporary files cleaned."
+} catch {
+    Write-Host "An error occurred: $_"
+}
 Write-Host " "
 Start-Sleep -Seconds 5
 

@@ -56,7 +56,7 @@ else {
 # Restart Explorer
 Write-Host "Stopping Windows Explorer."
 taskkill /f /im explorer.exe
-Update-ProgressBar -current 1 -total 5
+Update-ProgressBar -current 1 -total 7
 Write-Host "Restarting Windows Explorer."
 Write-Host " "
 start explorer.exe
@@ -65,7 +65,7 @@ Start-Sleep -Seconds 5
 # Clean up temporary files
 Write-Host "Cleaning up temporary files..."
 Remove-Item -Path $env:TEMP\* -Force -Recurse -ErrorAction Stop
-Update-ProgressBar -current 2 -total 5
+Update-ProgressBar -current 2 -total 7
 Write-Host "Temporary files cleaned."
 Write-Host " "
 Start-Sleep -Seconds 5
@@ -73,7 +73,7 @@ Start-Sleep -Seconds 5
 # Clear the recycle bin
 Write-Host "Clearing the recycle bin..."
 Clear-RecycleBin -Force -ErrorAction SilentlyContinue
-Update-ProgressBar -current 3 -total 5
+Update-ProgressBar -current 3 -total 7
 Write-Host "Permanently deleted the items in the recycle bin."
 Write-Host " "
 Start-Sleep -Seconds 5
@@ -81,7 +81,7 @@ Start-Sleep -Seconds 5
 # Perform disk cleanup of system files
 Write-Host "Performing disk cleanup..."
 Start-Process -FilePath "cleanmgr.exe" -ArgumentList "/sagerun:1" -Wait
-Update-ProgressBar -current 4 -total 5
+Update-ProgressBar -current 4 -total 7
 Write-Host "Disk cleanup of system files completed."
 Write-Host " "
 Start-Sleep -Seconds 5
@@ -93,6 +93,7 @@ Write-Host "Running SFC /scannow..."
 Write-Host "The System File Checker (SFC) command scans and repairs corrupted or missing system files."
 Write-Host "This process will help ensure the integrity of your system files."
 Start-Process -FilePath "sfc.exe" -ArgumentList "/scannow" -Wait
+Update-ProgressBar -current 5 -total 7
 Write-Host "SFC scan completed."
 Write-Host " "
 Start-Sleep -Seconds 5
@@ -102,12 +103,13 @@ Write-Host "Running DISM /Online /cleanup-image /restorehealth..."
 Write-Host "The Deployment Image Servicing and Management (DISM) command restores the health of your Windows image."
 Write-Host "It repairs any issues with system files and components, improving system stability."
 Start-Process -FilePath "dism.exe" -ArgumentList "/Online /Cleanup-Image /RestoreHealth" -Wait
+Update-ProgressBar -current 6 -total 7
 Write-Host "DISM restore health completed."
 Write-Host " "
 Start-Sleep -Seconds 5
 
 # Example usage
-Update-ProgressBar -current 5 -total 5
+Update-ProgressBar -current 7 -total 7
 Write-Host "`nCleanup complete."
 Write-Host " "
 

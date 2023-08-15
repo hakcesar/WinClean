@@ -86,6 +86,26 @@ Write-Host "Disk cleanup of system files completed."
 Write-Host " "
 Start-Sleep -Seconds 5
 
+Write-Host "The final cleanup process may take several minutes depending on your system's performance."
+
+# Run SFC /scannow
+Write-Host "Running SFC /scannow..."
+Write-Host "The System File Checker (SFC) command scans and repairs corrupted or missing system files."
+Write-Host "This process will help ensure the integrity of your system files."
+Start-Process -FilePath "sfc.exe" -ArgumentList "/scannow" -Wait
+Write-Host "SFC scan completed."
+Write-Host " "
+Start-Sleep -Seconds 5
+
+# Run DISM /Online /cleanup-image /restorehealth
+Write-Host "Running DISM /Online /cleanup-image /restorehealth..."
+Write-Host "The Deployment Image Servicing and Management (DISM) command restores the health of your Windows image."
+Write-Host "It repairs any issues with system files and components, improving system stability."
+Start-Process -FilePath "dism.exe" -ArgumentList "/Online /Cleanup-Image /RestoreHealth" -Wait
+Write-Host "DISM restore health completed."
+Write-Host " "
+Start-Sleep -Seconds 5
+
 # Example usage
 Update-ProgressBar -current 5 -total 5
 Write-Host "`nCleanup complete."

@@ -56,6 +56,7 @@ else {
 # Restart Explorer
 Write-Host "Stopping Windows Explorer."
 taskkill /f /im explorer.exe
+Update-ProgressBar -current 1 -total 5
 Write-Host "Restarting Windows Explorer."
 Write-Host " "
 start explorer.exe
@@ -64,7 +65,7 @@ Start-Sleep -Seconds 5
 # Clean up temporary files
 Write-Host "Cleaning up temporary files..."
 Remove-Item -Path $env:TEMP\* -Force -Recurse -ErrorAction Stop
-Update-ProgressBar -current 1 -total 4
+Update-ProgressBar -current 2 -total 5
 Write-Host "Temporary files cleaned."
 Write-Host " "
 Start-Sleep -Seconds 5
@@ -72,7 +73,7 @@ Start-Sleep -Seconds 5
 # Clear the recycle bin
 Write-Host "Clearing the recycle bin..."
 Clear-RecycleBin -Force -ErrorAction SilentlyContinue
-Update-ProgressBar -current 2 -total 4
+Update-ProgressBar -current 3 -total 5
 Write-Host "Permanently deleted the items in the recycle bin."
 Write-Host " "
 Start-Sleep -Seconds 5
@@ -80,13 +81,13 @@ Start-Sleep -Seconds 5
 # Perform disk cleanup of system files
 Write-Host "Performing disk cleanup..."
 Start-Process -FilePath "cleanmgr.exe" -ArgumentList "/sagerun:1" -Wait
-Update-ProgressBar -current 3 -total 4
+Update-ProgressBar -current 4 -total 5
 Write-Host "Disk cleanup of system files completed."
 Write-Host " "
 Start-Sleep -Seconds 5
 
 # Example usage
-Update-ProgressBar -current 4 -total 4
+Update-ProgressBar -current 5 -total 5
 Write-Host "`nCleanup complete."
 Write-Host " "
 

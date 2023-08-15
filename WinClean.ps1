@@ -1,5 +1,19 @@
 # WinClean script - PowerShell version
 
+# Hi :)
+$asciiArt = @"
+  ____ _ _      ______            _     
+ / ___(_) |_   / ___\ \   /\\   / ___|   
+| |   | | __| | |    \\ \\ / / | |       
+| |___| | |_  | |___  \\ V /  | |___    
+ \\____|_|\\__|  \\____|  \\_/    \\____|   
+                                        
+"@
+Write-Host $asciiArt
+Write-Host "Author: hakcesar"
+Write-Host "Blog: https://hakcesar.com"
+Write-Host ""
+
 # Check if the script is running as administrator
 $isAdmin = ([System.Security.Principal.WindowsIdentity]::GetCurrent()).groups -match "S-1-5-32-544"
 if (-not $isAdmin) {
@@ -25,6 +39,7 @@ function Update-ProgressBar {
 
 Clear-Host
 
+try {
 # Display a warning message
 Write-Host "WARNING: This script will clean up temporary files, clear the recycle bin, and perform disk cleanup. Make sure to back up any important data before running this script."
 
@@ -51,6 +66,7 @@ else {
     Set-ItemProperty HKCU:\Software\Microsoft\Windows\CurrentVersion\Run $edgePath -Value $null
     Write-Host "Microsoft Edge startup impact disabled."
     Write-Host " "
+    Start-Sleep -Seconds 3
 }
 
 # Restart Explorer
@@ -87,14 +103,18 @@ Write-Host " "
 Start-Sleep -Seconds 5
 
 Write-Host "The final cleanup process may take several minutes depending on your system's performance."
+Start-Sleep -Seconds 3
 
 # Run SFC /scannow
 Write-Host "Running SFC /scannow..."
 Write-Host "The System File Checker (SFC) command scans and repairs corrupted or missing system files."
 Write-Host "This process will help ensure the integrity of your system files."
-Start-Process -FilePath "sfc.exe" -ArgumentList "/scannow" -Wait
-Update-ProgressBar -current 5 -total 7
-Write-Host "SFC scan completed."
+try {
+    Start-Process -FilePath "sfc.exe" -ArgumentList "/scannow" -Wait -NoNewWindow
+    Write-Host "SFC scan completed."
+} catch {
+    Write-Host "An error occurred while running SFC: $_"
+}
 Write-Host " "
 Start-Sleep -Seconds 5
 
@@ -102,15 +122,23 @@ Start-Sleep -Seconds 5
 Write-Host "Running DISM /Online /cleanup-image /restorehealth..."
 Write-Host "The Deployment Image Servicing and Management (DISM) command restores the health of your Windows image."
 Write-Host "It repairs any issues with system files and components, improving system stability."
-Start-Process -FilePath "dism.exe" -ArgumentList "/Online /Cleanup-Image /RestoreHealth" -Wait
-Update-ProgressBar -current 6 -total 7
-Write-Host "DISM restore health completed."
+try {
+    Start-Process -FilePath "dism.exe" -ArgumentList "/Online /Cleanup-Image /RestoreHealth" -Wait -NoNewWindow
+    Write-Host "DISM restore health completed."
+} catch {
+    Write-Host "An error occurred while running DISM: $_"
+}
 Write-Host " "
 Start-Sleep -Seconds 5
 
-# Example usage
+# Complete
 Update-ProgressBar -current 7 -total 7
 Write-Host "`nCleanup complete."
 Write-Host " "
+
+} catch {
+    Write-Host "An error occurred: $_"
+}
+
 
 

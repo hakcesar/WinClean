@@ -71,26 +71,26 @@ Write-Host " "
 Write-Host "Cleaning up temporary files..."
 try {
     Remove-Item -Path $env:TEMP\* -Force -Recurse -ErrorAction Stop
-    Update-ProgressBar -current 1 -total 8
+    Update-ProgressBar -current 1 -total 7
     Write-Host "Temporary files cleaned."
 } catch {
     Write-Host "An error occurred: $_"
 }
 Write-Host " "
-Start-Sleep -Seconds 5
+Start-Sleep -Seconds 2
 
 # Clear the recycle bin
 Write-Host "Clearing the recycle bin..."
 Clear-RecycleBin -Force -ErrorAction SilentlyContinue
-Update-ProgressBar -current 2 -total 8
+Update-ProgressBar -current 2 -total 7
 Write-Host "Permanently deleted the items in the recycle bin."
 Write-Host " "
-Start-Sleep -Seconds 5
+Start-Sleep -Seconds 2
 
 # Perform disk cleanup of system files
 Write-Host "Performing disk cleanup..."
 Start-Process -FilePath "cleanmgr.exe" -ArgumentList "/sagerun:1" -Wait
-Update-ProgressBar -current 3 -total 8
+Update-ProgressBar -current 3 -total 7
 Write-Host "Disk cleanup of system files completed."
 Write-Host " "
 Start-Sleep -Seconds 2
@@ -98,22 +98,25 @@ Start-Sleep -Seconds 2
 # Run system scans
 Write-Host "The final cleanup process may take several minutes depending on your system's performance."
 Write-Host " "
-Start-Sleep -Seconds 3
+Start-Sleep -Seconds 1
 
 # Run SFC tool
-Write-Host "The System File Checker (SFC) tool scans and repairs corrupted or missing system files."
-Write-Host "This process will help ensure the integrity of your system files."
+Write-Host "SFC (System File Checker) is a built-in utility that scans and restores critical Windows system files, helping to maintain system integrity and reliability."
+Write-Host "Running SFC..."
 try {
     Start-Process -FilePath "sfc.exe" -ArgumentList "/scannow" -Wait -NoNewWindow
-    Update-ProgressBar -current 4 -total 8
+    Update-ProgressBar -current 4 -total 7
     Write-Host "SFC scan completed."
 } catch {
     Write-Host "An error occurred while running SFC: $_"
 }
 Write-Host " "
-Start-Sleep -Seconds 5
+Start-Sleep -Seconds 2
 
 # Run DISM health scan
+Write-Host " "
+Write-Host "DISM (Deployment Image Servicing and Management) is a command-line tool that repairs and maintains Windows system images, fixing potential corruption and enhancing system stability."
+Write-Host "Running DISM..."
 try {
     Start-Process -FilePath "dism.exe" -ArgumentList "/Online /NoRestart /Cleanup-Image /ScanHealth" -Wait -NoNewWindow
     Write-Host "DISM scan health completed."
@@ -126,19 +129,21 @@ if ($error) {
     Write-Host "DISM: Image corruption detected. Attempting repair..."
     try {
         Start-Process -FilePath "dism.exe" -ArgumentList "/Online /NoRestart /Cleanup-Image /RestoreHealth" -Wait -NoNewWindow
+        Update-ProgressBar -current 5 -total 7
         Write-Host "DISM restore health completed."
     } catch {
         Write-Host "An error occurred while running DISM restore health: $_"
     }
 } else {
-    Update-ProgressBar -current 5 -total 8
+    Update-ProgressBar -current 5 -total 7
     Write-Host "DISM: No image corruption detected."
 }
 Write-Host " "
-Start-Sleep -Seconds 5
+Start-Sleep -Seconds 2
 
 # Run chkdsk on system drive
 $systemDrive = [System.IO.Path]::GetPathRoot($env:SystemDrive)
+Write-Host "chkdsk (Check Disk) is a system utility that scans and repairs potential issues in your computer's file system, ensuring data integrity and stability."
 Write-Host "Running chkdsk on system drive ($systemDrive)..."
 try {
     $chkdskOutput = Invoke-Expression -Command "chkdsk $systemDrive /F /R"
@@ -146,21 +151,21 @@ try {
     $errorsFound = $chkdskOutput -match "errors found"
     
     if ($errorsFound) {
-        Update-ProgressBar -current 6 -total 8
+        Update-ProgressBar -current 6 -total 7
         Write-Host "Errors found on $systemDrive. Scheduling full chkdsk at next reboot."
     } else {
-        Update-ProgressBar -current 7 -total 8
+        Update-ProgressBar -current 6 -total 7
         Write-Host "No errors found on $systemDrive. Skipping full chkdsk at next reboot."
     }
 } catch {
     Write-Host "An error occurred while running chkdsk: $_"
 }
 Write-Host " "
-Start-Sleep -Seconds 5
+Start-Sleep -Seconds 2
 
 
 # Complete
-Update-ProgressBar -current 8 -total 8
+Update-ProgressBar -current 7 -total 7
 Write-Host "`nCleanup complete. Your PC will thank you later :)"
 Write-Host " "
 

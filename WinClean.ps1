@@ -98,10 +98,12 @@ Start-Sleep -Seconds 2
 # Run system scans
 Write-Host "The final cleanup process may take several minutes depending on your system's performance."
 Write-Host " "
-Start-Sleep -Seconds 1
+Start-Sleep -Seconds 3
 
 # Run SFC tool
 Write-Host "SFC (System File Checker) is a built-in utility that scans and restores critical Windows system files, helping to maintain system integrity and reliability."
+Start-Sleep -Seconds 3
+Write-Host " "
 Write-Host "Running SFC..."
 try {
     Start-Process -FilePath "sfc.exe" -ArgumentList "/scannow" -Wait -NoNewWindow
@@ -110,12 +112,13 @@ try {
 } catch {
     Write-Host "An error occurred while running SFC: $_"
 }
-Write-Host " "
 Start-Sleep -Seconds 2
 
 # Run DISM health scan
 Write-Host " "
 Write-Host "DISM (Deployment Image Servicing and Management) is a command-line tool that repairs and maintains Windows system images, fixing potential corruption and enhancing system stability."
+Start-Sleep -Seconds 3
+Write-Host " "
 Write-Host "Running DISM..."
 try {
     Start-Process -FilePath "dism.exe" -ArgumentList "/Online /NoRestart /Cleanup-Image /ScanHealth" -Wait -NoNewWindow
@@ -144,6 +147,7 @@ Start-Sleep -Seconds 2
 # Run chkdsk on system drive
 $systemDrive = [System.IO.Path]::GetPathRoot($env:SystemDrive)
 Write-Host "chkdsk (Check Disk) is a system utility that scans and repairs potential issues in your computer's file system, ensuring data integrity and stability."
+Start-Sleep -Seconds 3
 Write-Host "Running chkdsk on system drive ($systemDrive)..."
 try {
     $chkdskOutput = Invoke-Expression -Command "chkdsk $systemDrive /F /R"
@@ -163,12 +167,12 @@ try {
 Write-Host " "
 Start-Sleep -Seconds 2
 
-
 # Complete
 Update-ProgressBar -current 7 -total 7
-Write-Host "`nCleanup complete. Your PC will thank you later :)"
+Write-Host "`nCleanup complete."
 Write-Host " "
-
+Write-Host "Your PC will thank you later :)"
+Write-Host " "
 } catch {
     Write-Host "An error occurred: $_"
 }

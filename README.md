@@ -1,6 +1,6 @@
 # WinClean
 
-WinClean is a PowerShell 🧹 Script that automates the cleanup and maintenance tasks for your Windows 10 PC. It provides a set of functions to perform various operations, including:
+WinClean is a PowerShell 🧹 Script that automates the cleanup and maintenance tasks for your Windows PC. It provides a set of functions to perform various operations, including:
 
     🗑️ Cleaning temporary files 
     🗑️ Clearing the recycle bin 

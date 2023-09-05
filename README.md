@@ -10,5 +10,4 @@ WinClean is a PowerShell 🧹 Script that automates the cleanup and maintenance 
 
 Additionally, it includes a warning message to remind users to back up important data before proceeding. 
 
-The script offers flexibility for customization, allowing users to uncomment and add specific program names for uninstallation when ready. With this script, you can streamline the process of cleaning up your PC, optimizing its performance, and removing unnecessary clutter. 🗑
 
